@@ -1,0 +1,578 @@
+<%- include('partials/header', { title: 'Setup Guide' }) %>
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="nav-logo">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        AccessNode
+      </a>
+      <div class="nav-links">
+        <a href="/" class="btn btn-ghost btn-sm">Home</a>
+        <a href="/login" class="btn btn-ghost btn-sm">Sign In</a>
+        <a href="/register" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <style>
+    .setup-page { padding: 60px 0; background: var(--bg-base); }
+    .setup-page .container { max-width: 860px; }
+    .setup-hero { text-align: center; margin-bottom: 52px; }
+    .setup-hero h1 { font-size: 38px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .setup-hero p { color: var(--text-secondary); font-size: 16px; line-height: 1.6; max-width: 560px; margin: 0 auto; }
+    .setup-hero .gradient-text {
+      background: linear-gradient(135deg, var(--accent), var(--purple), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .setup-toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 48px; }
+    .setup-toc h3 { font-size: 14px; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .setup-toc ol { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .setup-toc ol li a { color: var(--text-secondary); font-size: 14px; transition: color var(--transition); }
+    .setup-toc ol li a:hover { color: var(--accent); }
+    .setup-section { margin-bottom: 48px; }
+    .setup-section h2 {
+      font-size: 24px; font-weight: 800; margin-bottom: 16px;
+      letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;
+    }
+    .setup-section h2::before {
+      content: ''; width: 4px; height: 28px; border-radius: 2px;
+      background: var(--accent); flex-shrink: 0;
+    }
+    .setup-section h3 { font-size: 17px; font-weight: 700; margin: 24px 0 10px; color: var(--text-primary); }
+    .setup-section p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; margin-bottom: 14px; }
+    .setup-section ul, .setup-section ol { color: var(--text-secondary); font-size: 14px; line-height: 1.8; padding-left: 22px; margin-bottom: 14px; }
+    .setup-section ul li, .setup-section ol li { margin-bottom: 4px; }
+    .setup-section strong { color: var(--text-primary); }
+    code.inline {
+      background: var(--bg-tertiary); color: var(--accent);
+      padding: 2px 8px; border-radius: 4px; font-size: 13px;
+      font-family: 'JetBrains Mono', 'SF Mono', monospace; border: 1px solid var(--border);
+    }
+    .code-block {
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 16px; overflow: hidden;
+    }
+    .code-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 600;
+      color: var(--text-tertiary); letter-spacing: 0.03em;
+    }
+    .code-block pre {
+      padding: 16px 20px; margin: 0; overflow-x: auto;
+      font-family: 'JetBrains Mono', 'SF Mono', monospace; font-size: 13px;
+      line-height: 1.7; color: var(--text-primary);
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .code-block pre .comment { color: var(--text-tertiary); }
+    .code-block pre .cmd { color: var(--green); }
+    .code-block pre .val { color: var(--orange); }
+    .setup-note {
+      background: var(--accent-subtle); border: 1px solid rgba(99,102,241,0.2);
+      border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 16px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+    }
+    .setup-note strong { color: var(--accent); }
+    .setup-warning {
+      background: var(--orange-subtle); border: 1px solid rgba(249,115,22,0.2);
+      border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 16px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+    }
+    .setup-warning strong { color: var(--orange); }
+    .setup-tip {
+      background: var(--green-subtle); border: 1px solid rgba(34,197,94,0.2);
+      border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 16px;
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+    }
+    .setup-tip strong { color: var(--green); }
+    .setup-step { display: flex; gap: 14px; margin-bottom: 20px; }
+    .setup-step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; flex-shrink: 0; margin-top: 2px;
+    }
+    .setup-step-content { flex: 1; }
+    .setup-step-content p { margin-bottom: 8px; }
+
+    @media (max-width: 768px) {
+      .setup-hero h1 { font-size: 28px; }
+      .setup-page { padding: 40px 0; }
+      .code-block pre { font-size: 12px; padding: 12px 14px; }
+    }
+  </style>
+
+  <div class="setup-page">
+    <div class="container">
+      <div class="setup-hero">
+        <h1>How to Set Up <span class="gradient-text">AccessNode</span></h1>
+        <p>A step-by-step guide to deploying your own password manager on a local machine or Google Cloud VPS.</p>
+      </div>
+
+      <div class="setup-toc">
+        <h3>Table of Contents</h3>
+        <ol>
+          <li><a href="#prerequisites">Prerequisites</a></li>
+          <li><a href="#local-setup">Local Setup</a></li>
+          <li><a href="#gcp-vm">Create a Google Cloud VM</a></li>
+          <li><a href="#server-setup">Server Setup</a></li>
+          <li><a href="#nginx">Nginx Reverse Proxy</a></li>
+          <li><a href="#ssl">SSL with Let's Encrypt</a></li>
+          <li><a href="#pm2">Process Management with PM2</a></li>
+          <li><a href="#updating">Updating AccessNode</a></li>
+          <li><a href="#troubleshooting">Troubleshooting</a></li>
+        </ol>
+      </div>
+
+      <!-- Prerequisites -->
+      <div class="setup-section" id="prerequisites">
+        <h2>1. Prerequisites</h2>
+        <p>Before you begin, make sure you have the following:</p>
+        <ul>
+          <li><strong>Node.js</strong> version 18 or later (<a href="https://nodejs.org" target="_blank">download</a>)</li>
+          <li><strong>npm</strong> (comes with Node.js)</li>
+          <li><strong>Git</strong> installed on your machine (<a href="https://git-scm.com" target="_blank">download</a>)</li>
+          <li>A <strong>Google Cloud Platform</strong> account (for VPS deployment)</li>
+          <li>A <strong>domain name</strong> pointing to your server (optional, but recommended for HTTPS)</li>
+        </ul>
+
+        <div class="setup-note">
+          <strong>Verify your Node.js installation:</strong><br>
+          Run <code class="inline">node --version</code> and <code class="inline">npm --version</code> in your terminal. You should see version numbers 18+ and 9+ respectively.
+        </div>
+      </div>
+
+      <!-- Local Setup -->
+      <div class="setup-section" id="local-setup">
+        <h2>2. Local Setup</h2>
+        <p>Get AccessNode running on your local machine first to verify everything works.</p>
+
+        <h3>Step 1: Clone or Download</h3>
+        <div class="code-block">
+          <div class="code-block-header">Terminal</div>
+          <pre><span class="cmd">git clone</span> https://github.com/your-username/accessnode.git
+<span class="cmd">cd</span> accessnode</pre>
+        </div>
+        <p>If you don't have the repository, download and extract the project files into a folder called <code class="inline">accessnode</code>.</p>
+
+        <h3>Step 2: Install Dependencies</h3>
+        <div class="code-block">
+          <div class="code-block-header">Terminal</div>
+          <pre><span class="cmd">npm install</span></pre>
+        </div>
+        <p>This installs all required packages: Express, SQLite, bcrypt, JWT, and more. It may take 30-60 seconds.</p>
+
+        <h3>Step 3: Configure Environment</h3>
+        <p>Copy the example environment file and edit it with your settings:</p>
+        <div class="code-block">
+          <div class="code-block-header">Terminal</div>
+          <pre><span class="cmd">cp</span> .env.example .env</pre>
+        </div>
+        <p>Open <code class="inline">.env</code> in your editor and change the values:</p>
+        <div class="code-block">
+          <div class="code-block-header">.env</div>
+          <pre><span class="val">PORT</span>=3000
+<span class="val">JWT_SECRET</span>=<em>generate-a-random-string-here-at-least-32-chars</em>
+<span class="val">SESSION_EXPIRY</span>=24h</pre>
+        </div>
+
+        <div class="setup-warning">
+          <strong>Important:</strong> The <code class="inline">JWT_SECRET</code> must be a long, random string. Never use the default value in production. You can generate one with:<br>
+          <code class="inline">node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"</code>
+        </div>
+
+        <h3>Step 4: Start the Server</h3>
+        <div class="code-block">
+          <div class="code-block-header">Terminal</div>
+          <pre><span class="cmd">npm start</span></pre>
+        </div>
+        <p>You should see <code class="inline">AccessNode running at http://localhost:3000</code>. Open this URL in your browser. The SQLite database (<code class="inline">accessnode.db</code>) is created automatically on first run.</p>
+
+        <div class="setup-tip">
+          <strong>Quick test:</strong> Visit <code class="inline">http://localhost:3000</code>, click "Get Started Free", create an account with any email and password (min. 8 characters), and you'll be taken to your dashboard.
+        </div>
+      </div>
+
+      <!-- Google Cloud VM -->
+      <div class="setup-section" id="gcp-vm">
+        <h2>3. Create a Google Cloud VM</h2>
+        <p>Deploy AccessNode on a Google Cloud VPS for 24/7 availability.</p>
+
+        <h3>Step 1: Create a VM Instance</h3>
+        <div class="setup-step">
+          <div class="setup-step-num">1</div>
+          <div class="setup-step-content">
+            <p>Go to the <strong>Google Cloud Console</strong> &rarr; <strong>Compute Engine</strong> &rarr; <strong>VM Instances</strong> and click <strong>Create Instance</strong>.</p>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">2</div>
+          <div class="setup-step-content">
+            <p><strong>Name:</strong> <code class="inline">accessnode-server</code></p>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">3</div>
+          <div class="setup-step-content">
+            <p><strong>Region &amp; Zone:</strong> Choose one close to your users (e.g., <code class="inline">us-central1-a</code>)</p>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">4</div>
+          <div class="setup-step-content">
+            <p><strong>Machine type:</strong> <code class="inline">e2-micro</code> or <code class="inline">e2-small</code> is sufficient (0.5-1 vCPU, 1-2 GB RAM)</p>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">5</div>
+          <div class="setup-step-content">
+            <p><strong>Boot disk:</strong> Ubuntu 22.04 LTS, 20 GB standard persistent disk</p>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">6</div>
+          <div class="setup-step-content">
+            <p><strong>Firewall:</strong> Check both <strong>Allow HTTP traffic</strong> and <strong>Allow HTTPS traffic</strong></p>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">7</div>
+          <div class="setup-step-content">
+            <p>Click <strong>Create</strong>. Wait ~30 seconds for the VM to provision.</p>
+          </div>
+        </div>
+
+        <h3>Step 2: Open Port 3000 in Firewall</h3>
+        <p>AccessNode runs on port 3000 by default. Create a firewall rule to allow traffic:</p>
+        <div class="setup-step">
+          <div class="setup-step-num">1</div>
+          <div class="setup-step-content">
+            <p>Go to <strong>VPC Network</strong> &rarr; <strong>Firewall</strong> &rarr; <strong>Create Firewall Rule</strong></p>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">2</div>
+          <div class="setup-step-content">
+            <p><strong>Name:</strong> <code class="inline">allow-accessnode</code></p>
+            <p><strong>Targets:</strong> <code class="inline">All instances in the network</code></p>
+            <p><strong>Source IP ranges:</strong> <code class="inline">0.0.0.0/0</code></p>
+            <p><strong>Protocols and ports:</strong> <code class="inline">tcp:3000,80,443</code></p>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">3</div>
+          <div class="setup-step-content">
+            <p>Click <strong>Create</strong></p>
+          </div>
+        </div>
+
+        <h3>Step 3: Reserve a Static External IP</h3>
+        <p>Prevent your IP from changing on VM restart:</p>
+        <ul>
+          <li>Go to <strong>VPC Network</strong> &rarr; <strong>External IP addresses</strong></li>
+          <li>Find the ephemeral IP assigned to your VM, change type to <strong>Static</strong></li>
+          <li>Give it a name like <code class="inline">accessnode-ip</code></li>
+        </ul>
+      </div>
+
+      <!-- Server Setup -->
+      <div class="setup-section" id="server-setup">
+        <h2>4. Server Setup</h2>
+        <p>SSH into your VM and install the required software.</p>
+
+        <h3>Step 1: Connect via SSH</h3>
+        <div class="code-block">
+          <div class="code-block-header">Terminal (your local machine)</div>
+          <pre><span class="cmd">gcloud compute ssh</span> accessnode-server</pre>
+        </div>
+        <p>Or use the <strong>SSH</strong> button in the Google Cloud Console next to your VM instance.</p>
+
+        <h3>Step 2: Install Node.js</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session — Ubuntu</div>
+          <pre><span class="comment"># Add NodeSource repository</span>
+<span class="cmd">curl -fsSL</span> https://deb.nodesource.com/setup_20.x | <span class="cmd">sudo -E bash -</span>
+
+<span class="comment"># Install Node.js and npm</span>
+<span class="cmd">sudo apt-get install -y</span> nodejs
+
+<span class="comment"># Verify installation</span>
+<span class="cmd">node --version</span>
+<span class="cmd">npm --version</span></pre>
+        </div>
+
+        <h3>Step 3: Install Git (if not present)</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo apt-get update</span>
+<span class="cmd">sudo apt-get install -y</span> git</pre>
+        </div>
+
+        <h3>Step 4: Clone and Set Up AccessNode</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">cd</span> /opt
+<span class="cmd">sudo git clone</span> https://github.com/your-username/accessnode.git
+<span class="cmd">sudo chown -R</span> $USER:$USER /opt/accessnode
+<span class="cmd">cd</span> /opt/accessnode
+<span class="cmd">npm install</span></pre>
+        </div>
+        <p>If you're uploading files directly instead of using git, use <code class="inline">scp</code> or the Google Cloud Console file upload.</p>
+
+        <h3>Step 5: Configure Environment Variables</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">cp</span> .env.example .env
+<span class="cmd">nano</span> .env</pre>
+        </div>
+        <p>Generate a secure <code class="inline">JWT_SECRET</code> and update the <code class="inline">.env</code> file:</p>
+        <div class="code-block">
+          <div class="code-block-header">Generate a random secret</div>
+          <pre><span class="cmd">node -e</span> <span class="val">"console.log(require('crypto').randomBytes(64).toString('hex'))"</span></pre>
+        </div>
+        <p>Copy the output and paste it into your <code class="inline">.env</code> as the <code class="inline">JWT_SECRET</code>.</p>
+
+        <div class="setup-warning">
+          <strong>Production checklist:</strong> Make sure your <code class="inline">.env</code> file has:
+          <ul style="margin-top:8px;">
+            <li>A <strong>unique, long JWT_SECRET</strong> (never use the default)</li>
+            <li><code class="inline">NODE_ENV=production</code> (enables stricter security)</li>
+          </ul>
+        </div>
+
+        <h3>Step 6: Test the Server</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">node</span> server.js</pre>
+        </div>
+        <p>You should see <code class="inline">AccessNode running at http://localhost:3000</code>. Press <strong>Ctrl+C</strong> to stop it after confirming it works.</p>
+        <p>Test from your browser at <code class="inline">http://YOUR_VM_IP:3000</code>. You should see the landing page.</p>
+      </div>
+
+      <!-- Nginx -->
+      <div class="setup-section" id="nginx">
+        <h2>5. Nginx Reverse Proxy</h2>
+        <p>A reverse proxy lets you serve AccessNode on standard ports (80/443) and adds a layer of security.</p>
+
+        <h3>Step 1: Install Nginx</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo apt-get install -y</span> nginx</pre>
+        </div>
+
+        <h3>Step 2: Create Nginx Configuration</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo nano</span> /etc/nginx/sites-available/accessnode</pre>
+        </div>
+        <p>Paste the following configuration:</p>
+        <div class="code-block">
+          <div class="code-block-header">/etc/nginx/sites-available/accessnode</div>
+          <pre>server {
+    <span class="val">listen</span> 80;
+    <span class="val">server_name</span> your-domain.com;
+
+    <span class="val">client_max_body_size</span> 10m;
+
+    <span class="val">location</span> / {
+        <span class="val">proxy_pass</span> http://localhost:3000;
+        <span class="val">proxy_http_version</span> 1.1;
+        <span class="val">proxy_set_header</span> Upgrade $http_upgrade;
+        <span class="val">proxy_set_header</span> Connection 'upgrade';
+        <span class="val">proxy_set_header</span> Host $host;
+        <span class="val">proxy_set_header</span> X-Real-IP $remote_addr;
+        <span class="val">proxy_set_header</span> X-Forwarded-For $proxy_add_x_forwarded_for;
+        <span class="val">proxy_set_header</span> X-Forwarded-Proto $scheme;
+        <span class="val">proxy_cache_bypass</span> $http_upgrade;
+    }
+}</pre>
+        </div>
+        <p>Replace <code class="inline">your-domain.com</code> with your actual domain or VM IP address.</p>
+
+        <h3>Step 3: Enable the Site and Restart Nginx</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo ln -s</span> /etc/nginx/sites-available/accessnode /etc/nginx/sites-enabled/
+<span class="cmd">sudo rm</span> /etc/nginx/sites-enabled/default  <span class="comment"># Remove default site</span>
+<span class="cmd">sudo nginx -t</span>                              <span class="comment"># Test configuration</span>
+<span class="cmd">sudo systemctl reload</span> nginx               <span class="comment"># Apply changes</span></pre>
+        </div>
+        <p>Now you can access AccessNode at <code class="inline">http://your-domain.com</code> or <code class="inline">http://YOUR_VM_IP</code> without specifying a port.</p>
+      </div>
+
+      <!-- SSL -->
+      <div class="setup-section" id="ssl">
+        <h2>6. SSL with Let's Encrypt</h2>
+        <p>Enable HTTPS for secure, encrypted connections to your password manager.</p>
+
+        <div class="setup-note">
+          <strong>Prerequisite:</strong> You need a domain name pointing to your VM's static IP address. If you don't have one, skip this section and use HTTP (not recommended for production).
+        </div>
+
+        <h3>Step 1: Install Certbot</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo apt-get install -y</span> certbot python3-certbot-nginx</pre>
+        </div>
+
+        <h3>Step 2: Obtain and Install Certificate</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo certbot</span> --nginx -d your-domain.com</pre>
+        </div>
+        <p>Follow the prompts. Certbot will automatically update your Nginx config to use HTTPS and set up auto-renewal.</p>
+
+        <h3>Step 3: Verify Auto-Renewal</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo certbot renew</span> --dry-run</pre>
+        </div>
+        <p>If this succeeds, your certificates will auto-renew before expiry. Certbot adds a cron job for this automatically.</p>
+
+        <h3>Step 4: Update Environment for HTTPS</h3>
+        <p>After enabling SSL, update your <code class="inline">.env</code> to set the app URL so cookies and redirects use HTTPS:</p>
+        <div class="code-block">
+          <div class="code-block-header">.env</div>
+          <pre><span class="val">NODE_ENV</span>=production</pre>
+        </div>
+      </div>
+
+      <!-- PM2 -->
+      <div class="setup-section" id="pm2">
+        <h2>7. Process Management with PM2</h2>
+        <p>PM2 keeps AccessNode running 24/7, auto-restarts on crashes, and starts on system boot.</p>
+
+        <h3>Step 1: Install PM2 Globally</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo npm install -g</span> pm2</pre>
+        </div>
+
+        <h3>Step 2: Start AccessNode with PM2</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">cd</span> /opt/accessnode
+<span class="cmd">pm2 start</span> server.js --name accessnode
+<span class="cmd">pm2 save</span></pre>
+        </div>
+
+        <h3>Step 3: Enable Startup on Boot</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">pm2 startup</span> systemd</pre>
+        </div>
+        <p>PM2 will output a command to run as sudo. Copy and paste that command to enable auto-start on system boot.</p>
+
+        <h3>Useful PM2 Commands</h3>
+        <div class="code-block">
+          <div class="code-block-header">PM2 Cheat Sheet</div>
+          <pre><span class="cmd">pm2 status</span>              <span class="comment"># View running processes</span>
+<span class="cmd">pm2 logs</span> accessnode      <span class="comment"># View application logs</span>
+<span class="cmd">pm2 restart</span> accessnode   <span class="comment"># Restart the app</span>
+<span class="cmd">pm2 stop</span> accessnode      <span class="comment"># Stop the app</span>
+<span class="cmd">pm2 delete</span> accessnode    <span class="comment"># Remove from PM2</span>
+<span class="cmd">pm2 monit</span>                <span class="comment"># Real-time monitoring dashboard</span></pre>
+        </div>
+      </div>
+
+      <!-- Updating -->
+      <div class="setup-section" id="updating">
+        <h2>8. Updating AccessNode</h2>
+        <p>When new versions are released, update your deployment:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">cd</span> /opt/accessnode
+<span class="cmd">git pull</span> origin main
+<span class="cmd">npm install</span>              <span class="comment"># Install any new dependencies</span>
+<span class="cmd">pm2 restart</span> accessnode   <span class="comment"># Restart with the new code</span></pre>
+        </div>
+
+        <div class="setup-note">
+          <strong>Backup first:</strong> Before updating, make a backup of your database file:<br>
+          <code class="inline">cp /opt/accessnode/accessnode.db /opt/accessnode/accessnode.db.backup</code>
+        </div>
+
+        <h3>Backup Strategy</h3>
+        <p>Set up a daily cron job to back up your encrypted database to Google Cloud Storage or another location:</p>
+        <div class="code-block">
+          <div class="code-block-header">Add to crontab (crontab -e)</div>
+          <pre><span class="comment"># Daily backup at 2 AM</span>
+<span class="val">0 2 * * *</span> cp /opt/accessnode/accessnode.db /opt/backups/accessnode-$(date +\%Y\%m\%d).db</pre>
+        </div>
+      </div>
+
+      <!-- Troubleshooting -->
+      <div class="setup-section" id="troubleshooting">
+        <h2>9. Troubleshooting</h2>
+
+        <h3>Port Already in Use</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="comment"># Find what's using the port</span>
+<span class="cmd">sudo lsof -i</span> :3000
+
+<span class="comment"># Kill the process</span>
+<span class="cmd">sudo kill -9</span> &lt;PID&gt;
+
+<span class="comment"># Or use a different port in .env</span>
+<span class="val">PORT</span>=3001</pre>
+        </div>
+
+        <h3>Can't Access from Browser</h3>
+        <ul>
+          <li>Verify the server is running: <code class="inline">pm2 status</code></li>
+          <li>Check firewall rules in Google Cloud Console &rarr; VPC Network &rarr; Firewall</li>
+          <li>Verify Nginx is running: <code class="inline">sudo systemctl status nginx</code></li>
+          <li>Check Nginx error logs: <code class="inline">sudo tail -f /var/log/nginx/error.log</code></li>
+        </ul>
+
+        <h3>Database Corruption</h3>
+        <p>If the SQLite database gets corrupted, restore from a backup:</p>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">pm2 stop</span> accessnode
+<span class="cmd">cp</span> accessnode.db.backup accessnode.db
+<span class="cmd">pm2 start</span> accessnode</pre>
+        </div>
+
+        <h3>SSL Certificate Expired</h3>
+        <div class="code-block">
+          <div class="code-block-header">SSH Session</div>
+          <pre><span class="cmd">sudo certbot renew</span>
+<span class="cmd">sudo systemctl reload</span> nginx</pre>
+        </div>
+
+        <h3>App Crashes on Start</h3>
+        <ul>
+          <li>Check PM2 logs: <code class="inline">pm2 logs accessnode --lines 50</code></li>
+          <li>Verify Node.js version is 18+: <code class="inline">node --version</code></li>
+          <li>Reinstall dependencies: <code class="inline">rm -rf node_modules && npm install</code></li>
+          <li>Check disk space: <code class="inline">df -h</code></li>
+        </ul>
+      </div>
+
+      <div class="setup-section" style="text-align:center;margin-top:60px;">
+        <p style="color:var(--text-secondary);margin-bottom:24px;">Ready to get started? Your vault is waiting.</p>
+        <a href="/register" class="btn btn-primary btn-lg">Create Free Account</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <div class="footer-brand">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>AccessNode</span>
+          </div>
+          <p>Self-hosted password & account manager</p>
+        </div>
+        <div class="footer-links">
+          <a href="/setup">Setup Guide</a>
+          <a href="/login">Sign In</a>
+          <a href="/register">Register</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+<%- include('partials/footer') %>

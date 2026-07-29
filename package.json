@@ -1,0 +1,33 @@
+{
+  "name": "accessnode",
+  "version": "1.0.0",
+  "description": "AccessNode - Self-hosted Password & Account Manager",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.0.0",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "express-rate-limit": "^8.6.1",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.11.0"
+  },
+  "keywords": [
+    "password-manager",
+    "account-manager",
+    "self-hosted"
+  ],
+  "license": "MIT",
+  "allowScripts": {
+    "better-sqlite3@11.10.0": true
+  }
+}
