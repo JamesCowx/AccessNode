@@ -6,9 +6,14 @@ async function seed() {
   const email = 'Admin@jamescowx.com';
   const password = 'Admin';
 
-  const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email.toLowerCase());
+  const existing = db.prepare('SELECT id, is_admin FROM users WHERE email = ?').get(email.toLowerCase());
   if (existing) {
-    console.log('Admin user already exists. Skipping.');
+    if (!existing.is_admin) {
+      db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(existing.id);
+      console.log('Admin user updated to admin role.');
+    } else {
+      console.log('Admin user already exists. Skipping.');
+    }
     process.exit(0);
   }
 
@@ -16,7 +21,7 @@ async function seed() {
   const encryptionSalt = crypto.randomBytes(32).toString('hex');
 
   db.prepare(
-    'INSERT INTO users (email, password_hash, encryption_salt) VALUES (?, ?, ?)'
+    'INSERT INTO users (email, password_hash, encryption_salt, is_admin) VALUES (?, ?, ?, 1)'
   ).run(email.toLowerCase(), passwordHash, encryptionSalt);
 
   console.log('Admin user created:');

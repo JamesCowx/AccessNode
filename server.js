@@ -11,6 +11,7 @@ const morgan = require('morgan');
 
 const authRoutes = require('./routes/auth');
 const vaultRoutes = require('./routes/vault');
+const adminRoutes = require('./routes/admin');
 const pageRoutes = require('./routes/pages');
 const { authMiddleware } = require('./middleware/auth');
 
@@ -134,6 +135,7 @@ app.get('/health', (req, res) => {
 app.use('/', pageRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/vault', authMiddleware, vaultRoutes);
+app.use('/admin', adminRoutes);
 
 app.use((req, res) => {
   if (req.path.startsWith('/api/')) {

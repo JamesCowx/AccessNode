@@ -14,6 +14,7 @@ db.exec(`
     password_hash TEXT NOT NULL,
     encryption_salt TEXT NOT NULL,
     theme TEXT DEFAULT 'dark',
+    is_admin INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );

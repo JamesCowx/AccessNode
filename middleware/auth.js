@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const db = require('../models/db');
 
 function getToken(req) {
   return req.cookies?.token || req.signedCookies?.token || null;
@@ -27,6 +28,17 @@ function authMiddleware(req, res, next) {
   }
 }
 
+function adminMiddleware(req, res, next) {
+  const user = db.prepare('SELECT is_admin FROM users WHERE id = ?').get(req.user.id);
+  if (!user || !user.is_admin) {
+    if (req.path.startsWith('/api/')) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    return res.status(403).render('403', { user: req.user });
+  }
+  next();
+}
+
 function guestOnly(req, res, next) {
   const token = getToken(req);
   if (token) {
@@ -40,4 +52,4 @@ function guestOnly(req, res, next) {
   next();
 }
 
-module.exports = { authMiddleware, guestOnly };
+module.exports = { authMiddleware, adminMiddleware, guestOnly };
