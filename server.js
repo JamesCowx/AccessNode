@@ -79,7 +79,7 @@ app.use((req, res, next) => {
   }
 
   const cookieToken = req.cookies[CSRF_COOKIE];
-  const headerToken = req.headers[CSRF_HEADER];
+  const headerToken = req.headers[CSRF_HEADER] || req.body._csrf;
 
   if (!cookieToken || !headerToken || cookieToken !== headerToken) {
     if (req.path.startsWith('/api/')) {

@@ -7,6 +7,17 @@ const db = require('../models/db');
 
 const router = express.Router();
 
+function respond(req, res, data) {
+  if (req.headers['content-type'] && req.headers['content-type'].includes('application/json')) {
+    return res.json(data);
+  }
+  if (data.error) {
+    return res.redirect((req.path === '/login' ? '/login' : '/register') + '?error=' + encodeURIComponent(data.error));
+  }
+  if (data.redirect) return res.redirect(data.redirect);
+  return res.json(data);
+}
+
 function validate(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -41,7 +52,7 @@ router.post('/register', registerValidation, async (req, res) => {
 
     const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email.toLowerCase());
     if (existing) {
-      return res.status(409).json({ error: 'An account with this email already exists' });
+      return respond(req, res, { error: 'An account with this email already exists' });
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
@@ -67,7 +78,7 @@ router.post('/register', registerValidation, async (req, res) => {
       signed: true,
     });
 
-    res.json({ success: true, redirect: '/dashboard' });
+    respond(req, res, { success: true, redirect: '/dashboard' });
   } catch (err) {
     console.error('Registration error:', err.message);
     res.status(500).json({ error: 'Server error during registration' });
@@ -80,12 +91,12 @@ router.post('/login', loginValidation, async (req, res) => {
 
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email.toLowerCase());
     if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      return respond(req, res, { error: 'Invalid email or password' });
     }
 
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+      return respond(req, res, { error: 'Invalid email or password' });
     }
 
     const token = jwt.sign(
@@ -104,10 +115,7 @@ router.post('/login', loginValidation, async (req, res) => {
       signed: true,
     });
 
-    res.json({ success: true, redirect: '/dashboard' });
-  } catch (err) {
-    console.error('Login error:', err.message);
-    res.status(500).json({ error: 'Server error during login' });
+    respond(req, res, { success: true, redirect: '/dashboard' });
   }
 });
 
