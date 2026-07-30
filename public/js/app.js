@@ -197,22 +197,11 @@
     requestAnimationFrame(step);
   }
 
-  // ---- Auth pages ----
-  var lf = $('#login-form');
-  if (lf) {
-    lf.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var err = $('#login-error'); err.style.display = 'none';
-      API.post('/api/auth/login', { email: $('#email').value.trim(), password: $('#password').value })
-        .then(function (d) { window.location.href = d.redirect; })
-        .catch(function (e2) { err.textContent = e2.message; err.style.display = 'block'; });
-    });
-  }
+  // ---- Auth pages (HTML forms handle login/register natively) ----
   var rf = $('#register-form');
   if (rf) {
     var pi = $('#password'), ps = $('#password-strength'), sf = $('#strength-fill'), sl = $('#strength-label');
     if (pi) { pi.addEventListener('input', function () { var p = pi.value; if (!p) { ps.style.display = 'none'; return; } ps.style.display = 'block'; var s = pwStrength(p); sf.style.width = ((s.score / 9) * 100) + '%'; sf.style.background = s.color; sl.textContent = s.label; sl.style.color = s.color; }); }
-    rf.addEventListener('submit', function (e) { e.preventDefault(); var err = $('#register-error'); err.style.display = 'none'; API.post('/api/auth/register', { email: $('#email').value.trim(), password: pi.value }).then(function (d) { window.location.href = d.redirect; }).catch(function (e2) { err.textContent = e2.message; err.style.display = 'block'; }); });
   }
 
   // ---- Dashboard ----
