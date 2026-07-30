@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 function getToken(req) {
-  return req.signedCookies?.token || req.cookies?.token || null;
+  return req.cookies?.token || req.signedCookies?.token || null;
 }
 
 function authMiddleware(req, res, next) {

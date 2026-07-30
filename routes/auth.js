@@ -71,11 +71,9 @@ router.post('/register', registerValidation, async (req, res) => {
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: isProduction,
       sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000,
       path: '/',
-      signed: true,
     });
 
     respond(req, res, { success: true, redirect: '/dashboard' });
@@ -108,11 +106,9 @@ router.post('/login', loginValidation, async (req, res) => {
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: isProduction,
       sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000,
       path: '/',
-      signed: true,
     });
 
     respond(req, res, { success: true, redirect: '/dashboard' });
