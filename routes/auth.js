@@ -81,7 +81,7 @@ router.post('/register', registerValidation, async (req, res) => {
     respond(req, res, { success: true, redirect: '/dashboard' });
   } catch (err) {
     console.error('Registration error:', err.message);
-    res.status(500).json({ error: 'Server error during registration' });
+    respond(req, res, { error: 'Server error during registration' });
   }
 });
 
@@ -116,6 +116,9 @@ router.post('/login', loginValidation, async (req, res) => {
     });
 
     respond(req, res, { success: true, redirect: '/dashboard' });
+  } catch (err) {
+    console.error('Login error:', err.message);
+    respond(req, res, { error: 'Server error during login' });
   }
 });
 
